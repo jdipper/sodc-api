@@ -1,2 +1,3 @@
 #!/bin/bash
+docker build --target api_platform_nginx -f $DOCKERFILE_PATH -t $NGINX_REPO:$IMAGE_TAG .
 docker build --target api_platform_php -f $DOCKERFILE_PATH -t $IMAGE_NAME .
