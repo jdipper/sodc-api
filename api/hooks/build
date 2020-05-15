@@ -1,1 +1,1 @@
-docker build --target api_platform_php -f $DOCKERFILE_PATH -t $IMAGE_NAME .s
+docker build --target api_platform_php -f $DOCKERFILE_PATH -t $IMAGE_NAME .
