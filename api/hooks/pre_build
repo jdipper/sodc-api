@@ -1,4 +1,5 @@
 #!/bin/bash
-echo $IMAGE_TAG
-#docker build --target api_platform_nginx -f $DOCKERFILE_PATH -t $NGINX_REPO:$IMAGE_TAG .
-#docker push $NGINX_REPO:$IMAGE_TAG
+echo "Building api_platform_nginx as $NGINX_REPO:$DOCKER_TAG"
+docker build --target api_platform_nginx -f $DOCKERFILE_PATH -t $NGINX_REPO:$DOCKER_TAG .
+echo "Pushing image to $NGINX_REPO:$DOCKER_TAG"
+docker push $NGINX_REPO:$DOCKER_TAG
