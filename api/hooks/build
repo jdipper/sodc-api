@@ -1,2 +1,0 @@
-#!/bin/bash
-# docker build --target api_platform_php -f $DOCKERFILE_PATH -t $IMAGE_NAME .
