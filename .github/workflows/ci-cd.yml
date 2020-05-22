@@ -65,6 +65,7 @@ jobs:
           docker buildx create --driver docker-container --driver-opt image=moby/buildkit:master,network=host --use default_tls
       - name: Build images
         run: |
+          echo ::set-output name=SOURCE_TAG::test
           docker buildx bake \
             --pull \
             --set admin.args.BUILDKIT_INLINE_CACHE=1 \
@@ -105,10 +106,12 @@ jobs:
           curl -fk -H 'Host: localhost' https://docker:444 # Admin
           curl -fk -H 'Host: localhost' https://docker:8443 # API
       - name: Login to registry
-        if: github.event_name == 'push' && github.repository == 'api-platform/api-platform' && github.ref == 'refs/heads/master'
-        run: echo '${{ secrets.DOCKER_PASSWORD }}' | docker login --username '${{ secrets.DOCKER_USERNAME }}' --password-stdin "$DOCKER_REGISTRY"
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: echo '${{ secrets.DOCKER_TOKEN }}' | docker login --username '${{ secrets.DOCKER_USERNAME }}' --password-stdin "$DOCKER_REGISTRY"
+      - name: Check Successful
+        if: success()
       - name: Push images
-        if: github.event_name == 'push' && github.repository == 'api-platform/api-platform' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           docker-compose push \
             admin \
