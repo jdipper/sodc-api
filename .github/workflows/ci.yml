@@ -3,7 +3,7 @@ name: CI
 on:
   push:
   pull_request:
-  deployment:
+  repository_dispatch:
 
 env:
   DOCKER_BUILDX_VERSION: '0.3.1'
