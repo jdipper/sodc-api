@@ -45,17 +45,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install system packages
+      - name: Cache Docker Builder
+        id: cache-docker-builder
+        uses: actions/cache@v2
+        with:
+          path: ~/.docker
+          key: docker-builder
+      - name: Cache Docker Compose
+        id: cache-docker-compose
+        uses: actions/cache@v2
+        with:
+          path: /usr/local/bin/docker-compose
+          key: docker-compose
+      - name: Install Docker Builder
+        if: steps.cache-docker-builder.outputs.cache-hit != 'true'
         run: |
-          apk add \
-            curl \
-            jq \
-      - name: Install Docker Buildx
-        run: |
+          apk add curl
           mkdir -p ~/.docker/cli-plugins
           curl -fsSL -o ~/.docker/cli-plugins/docker-buildx "https://github.com/docker/buildx/releases/download/v${DOCKER_BUILDX_VERSION}/buildx-v${DOCKER_BUILDX_VERSION}.linux-amd64"
           chmod +x ~/.docker/cli-plugins/docker-buildx
       - name: Install Docker Compose
+        if: steps.cache-docker-compose.outputs.cache-hit != 'true'
         run: |
           docker create --name docker_compose "docker/compose:alpine-${DOCKER_COMPOSE_VERSION}"
           docker cp docker_compose:/usr/local/bin/docker-compose /usr/local/bin/docker-compose
@@ -79,6 +89,7 @@ jobs:
             --set php.output=type=docker \
       - name: Validate composer.json
         run: |
+          apk add jq
           if jq -e '.extra.symfony.id != null' api/composer.json > /dev/null; then
             echo 'api/composer.json must not have extra.symfony.id' 1>&2
             exit 1
@@ -162,16 +173,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install system packages
+      - name: Cache Docker Builder
+        id: cache-docker-builder
+        uses: actions/cache@v2
+        with:
+          path: ~/.docker
+          key: docker-builder
+      - name: Cache Docker Compose
+        id: cache-docker-compose
+        uses: actions/cache@v2
+        with:
+          path: /usr/local/bin/docker-compose
+          key: docker-compose
+      - name: Install Docker Builder
+        if: steps.cache-docker-builder.outputs.cache-hit != 'true'
         run: |
-          apk add \
-            curl \
-      - name: Install Docker Buildx
-        run: |
+          apk add curl
           mkdir -p ~/.docker/cli-plugins
           curl -fsSL -o ~/.docker/cli-plugins/docker-buildx "https://github.com/docker/buildx/releases/download/v${DOCKER_BUILDX_VERSION}/buildx-v${DOCKER_BUILDX_VERSION}.linux-amd64"
           chmod +x ~/.docker/cli-plugins/docker-buildx
       - name: Install Docker Compose
+        if: steps.cache-docker-compose.outputs.cache-hit != 'true'
         run: |
           docker create --name docker_compose "docker/compose:alpine-${DOCKER_COMPOSE_VERSION}"
           docker cp docker_compose:/usr/local/bin/docker-compose /usr/local/bin/docker-compose
