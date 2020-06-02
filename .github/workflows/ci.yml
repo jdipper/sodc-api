@@ -11,6 +11,25 @@ env:
   DOCKER_REGISTRY: quay.io
 
 jobs:
+  docker-prepare-test-env:
+    name: Docker Build Test Environment (Docker ${{ matrix.docker }})
+    runs:
+      using: 'docker'
+      image: 'actions/Dockerfile'
+    container:
+      env:
+        DOCKER_CERT_PATH: /certs/client
+        DOCKER_CLI_EXPERIMENTAL: enabled
+        DOCKER_HOST: tcp://docker:2376
+        DOCKER_TLS_VERIFY: '1'
+      options: >-
+        -v /tmp/docker/certs/client:/certs/client
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
   docker-build-test-deploy:
     name: Docker build/test/deploy (Docker ${{ matrix.docker }})
     runs-on: ubuntu-latest
