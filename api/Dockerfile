@@ -1,4 +1,4 @@
-# the different stages of this Dockerfile are meant to be built into separate images
+# the different stages of this docker_test_container are meant to be built into separate images
 # https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
 # https://docs.docker.com/compose/compose-file/#target
 
@@ -130,7 +130,7 @@ COPY --from=api_platform_php /srv/api/public ./
 
 
 # "varnish" stage
-# does not depend on any of the above stages, but placed here to keep everything in one Dockerfile
+# does not depend on any of the above stages, but placed here to keep everything in one docker_test_container
 FROM varnish:${VARNISH_VERSION} AS api_platform_varnish
 
 COPY docker/varnish/conf/default.vcl /etc/varnish/default.vcl
