@@ -40,9 +40,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Docker image check
-        run: |
-          ls -al /github/
       - name: Create builder instance
         run: |
           docker context create default_tls
