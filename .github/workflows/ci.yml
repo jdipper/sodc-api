@@ -42,8 +42,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Docker image check
         run: |
-          ls /home/
-          echo "$user"
+          id
+          getent passwd
+          ls -al /home/
       - name: Create builder instance
         run: |
           docker context create default_tls
