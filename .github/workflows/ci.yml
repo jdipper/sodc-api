@@ -120,9 +120,11 @@ jobs:
     timeout-minutes: 10
     env:
       ADMIN_HOST: admin.127-0-0-1.sslip.io
+      ADMIN_IMAGE: quay.io/api-platform/admin
       API_HOST: api.127-0-0-1.sslip.io
       APP_SECRET: 3c857494cfcc42c700dfb7a6
       CLIENT_HOST: 127-0-0-1.sslip.io,www.127-0-0-1.sslip.io
+      CLIENT_IMAGE: quay.io/api-platform/client
       CORS_ALLOW_ORIGIN: ^http://(?:\w+\.)?127-0-0-1\.sslip\.io$
       DATABASE_URL: postgres://api-platform:4e3bc2766fe81df300d56481@db/api
       MERCURE_ALLOW_ANONYMOUS: '0'
@@ -131,9 +133,12 @@ jobs:
       MERCURE_JWT_KEY: 4121344212538417de3e2118
       MERCURE_JWT_SECRET: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjdXJlIjp7InN1YnNjcmliZSI6WyJmb28iLCJiYXIiXSwicHVibGlzaCI6WyJmb28iXX19.B0MuTRMPLrut4Nt3wxVvLtfWB_y189VEpWMlSmIQABQ
       MERCURE_SUBSCRIBE_URL: http://mercure.127-0-0-1.sslip.io/.well-known/mercure
+      NGINX_IMAGE: quay.io/api-platform/nginx
+      PHP_IMAGE: quay.io/api-platform/php
       POSTGRES_PASSWORD: 4e3bc2766fe81df300d56481
       REACT_APP_API_ENTRYPOINT: http://api.127-0-0-1.sslip.io
       TRUSTED_HOSTS: ^(?:localhost|api|api\.127-0-0-1\.sslip\.io)$
+      VARNISH_IMAGE: quay.io/api-platform/varnish
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -145,7 +150,7 @@ jobs:
         run: wget -O - https://github.com/api-platform/docker-compose-prod/archive/master.tar.gz | tar -xzf - && mv docker-compose-prod-master docker-compose-prod
       - name: Build images
         run: |
-          docker-compose -f docker-compose-prod/docker-compose.build.yml --ignore-pull-failures config > docker-compose.bake.yml
+          docker-compose -f docker-compose-prod/docker-compose.build.yml config > docker-compose.bake.yml
           docker buildx bake \
             -f docker-compose.bake.yml \
             --pull \
