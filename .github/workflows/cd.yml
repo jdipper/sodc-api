@@ -2,21 +2,15 @@ name: CD
 
 on:
   release:
-    types: [published]
 
 jobs:
   docker-save:
-    name: Docker save build (Docker ${{ matrix.docker }})
+    name: Docker save build
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        docker:
-          - '19.03'
       fail-fast: false
     timeout-minutes: 10
     steps:
-    - name: Get tag version
+    - name: Say Something
       id: get_tag
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-    - name: Print version
-      run: echo ${{ steps.get_tag.outputs.VERSION }}
+      run: echo "Hello"
